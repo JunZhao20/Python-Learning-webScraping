@@ -66,7 +66,7 @@ def find_job():
             result += f"{' '.join(job_)}\n"
         print(result)
         
-    with open(f'/Users/jun/Documents/Python-webScraping/Python-Learning-webScraping/webScraping/projects/jobResults.txt', 'w') as f:
+    with open(f'/Users/jun/Documents/Python-webScraping/Python-Learning-webScraping/webScraping/projects/JobFinder/jobResults.txt', 'w') as f:
        f.write(f"{result}")
        
     

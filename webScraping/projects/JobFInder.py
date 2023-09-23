@@ -28,9 +28,6 @@ def find_job():
             location = location.text.lower().strip().split(',')
         else:
             location = ''
-        #filters out user input for locations
-        if unfamilair_loc in location:
-            del location
             
         job_link = tag.find('a', attrs={'href' : True})['href']
         
@@ -41,6 +38,7 @@ def find_job():
             job = job.text
         else:
             job = ''
+            
         salary = tag.find('dd', class_="job__details-value salary")
         
         if salary is not None:
@@ -50,15 +48,27 @@ def find_job():
         
         
         posted = tag.find('p', class_='job__posted-by').text.replace(' ', '')
-        #make all the jobs get put into a sublist to later remove jobs 
-        #that are None or has 'unfamiliar_loc'
-        lst.append(list(job,job_link,salary,location, posted))  
         
-        result += f"{job}\n{job_link}\n{salary}\n{location}\n{posted}\n"
+        # creates a sublist of collection of tags of 1 job listing into a list
+        lst.append([f"{job}\n",f"{job_link}\n",f"{salary}\n",f"{location}\n", f"{posted}\n"])
         
-        print(result.strip())
-    # with open(f'/Users/jun/Documents/Python-webScraping/Python-Learning-webScraping/webScraping/projects/jobResults.txt', 'w') as f:
-    #     f.write(f"{job}\n{job_link}\n{salary}\n{location}\n{posted}")
+        #Filters out the location based on 'unfamiliar_loc' input.
+        for i in lst:
+            for elem in i:
+                #checks is elem is a list which stores the location tag
+                if type(elem) is list:
+                    for x in elem:
+                        # if condition to check if job location has 'unfamiliar_loc' input
+                        if unfamilair_loc == x.strip():
+                            lst.remove(i)
+        
+        for job_ in lst:
+            result += f"{' '.join(job_)}\n"
+        print(result)
+        
+    with open(f'/Users/jun/Documents/Python-webScraping/Python-Learning-webScraping/webScraping/projects/jobResults.txt', 'w') as f:
+       f.write(f"{result}")
+       
     
 
 if __name__ == '__main__':
@@ -68,11 +78,11 @@ if __name__ == '__main__':
         # Dynamic approach to start wait time
         time_wait = 10
         print(f"Waiting {time_wait} minutes")
-        leave = input('Type '"y"' to quit, else then wait.')
-        if leave == 'y' or leave == 'Y':
-            exit()
-        else:
-        #Allows program to stop running for a destinated time(seconds)
+        leave = input('Type '"y"' to quit, else then wait.').lower()
+        if leave != 'y':
+            #Allows program to stop running for a destinated time(seconds)
             time.sleep(time_wait * 60)
+        else:
+            exit()
         
         
